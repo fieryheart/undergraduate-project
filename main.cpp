@@ -3,7 +3,7 @@
  * @Author: fieryheart
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-03 21:07:46
- * @LastEditTime: 2019-04-04 21:27:47
+ * @LastEditTime: 2019-04-04 22:39:30
  */
 #include <iostream>
 #include <cstdlib>
@@ -17,4 +17,3 @@ int main()
     cout << "random number: " << getRandomNumber(seed) << endl;
     return 0;
 }
-
