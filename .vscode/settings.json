@@ -1,0 +1,14 @@
+{
+    "code-runner.executorMap": {
+        "c": "cd $dir && make && ./$fileNameWithoutExt && make clean",
+        "cpp": "cd $dir && make && ./$fileNameWithoutExt && make clean",
+    },
+    "code-runner.runInTerminal": true,
+    "code-runner.enableAppInsights": false,
+    "[makefile]": {
+        "editor.insertSpaces": true
+    },
+    "C_Cpp.default.includePath": [
+        "/usr/local/include"
+    ]
+}
