@@ -3,7 +3,7 @@
  * @Author: fieryheart
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-03 21:07:46
- * @LastEditTime: 2019-04-07 12:16:37
+ * @LastEditTime: 2019-04-21 19:41:12
  */
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -204,6 +204,7 @@ void toGetBoundingBox()
 
             if(faceRects.size() == 0) {
                 boundingbox_ofs << "0 0 0 0" << endl;
+                // cout << i+1 << endl;
             } else {
                 boundingbox_ofs << faceRects[0].x << " " << faceRects[0].y << " " << faceRects[0].x + faceRects[0].width << " " << faceRects[0].y + faceRects[0].height << endl;
                 boundingbox_is_ofs << i+1 << endl;           
@@ -298,12 +299,16 @@ void toTrain()
 
 void toCamera()
 {
-    //打开视频文件
+    //打开视频捕捉器
     VideoCapture capture(0);
     if(!capture.isOpened()){
         cout << "cannot open camera" << endl;
         return ;
     }
+
+    // 设置分辨率
+    capture.set(3, 320);
+    capture.set(4, 240);
 
     int initial_number = 20;
     int landmark_num = 29;
@@ -314,7 +319,7 @@ void toCamera()
     }
 
     ShapeRegressor regressor;
-    regressor.Load("./data/model.txt");
+    regressor.Load("./data/model_author.txt");
 
     TickMeter tm;
 
@@ -328,23 +333,24 @@ void toCamera()
         for(int i = 0; i < 100; ++i) {
             capture >> frame;
 
-            // cvtColor(frame, frame_gray, CV_RGB2GRAY);
+            cvtColor(frame, frame_gray, CV_RGB2GRAY);
 
-            // flip(frame_gray, frame_flip, 1);
+            flip(frame_gray, frame_flip, 1);
 
             vector<Rect> faceRects;
-            // face_cascade.detectMultiScale(
-            //     frame_flip,
-            //     faceRects,
-            //     1.1,
-            //     2,
-            //     0 | CV_HAAR_SCALE_IMAGE,
-            //     Size(80, 80)
-            // );
+            face_cascade.detectMultiScale(
+                frame_flip,
+                faceRects,
+                1.1,
+                2,
+                0 | CV_HAAR_SCALE_IMAGE,
+                Size(80, 80)
+            );
 
-            // image_temp = frame_flip;
-            image_temp = frame;
+            image_temp = frame_flip;
+            // image_temp = frame;
 
+    
             if(faceRects.size()) {
                 boundingBox_temp.start_x = faceRects[0].x;
                 boundingBox_temp.start_y = faceRects[0].y;
@@ -353,14 +359,18 @@ void toCamera()
                 boundingBox_temp.centroid_x = boundingBox_temp.start_x + boundingBox_temp.width / 2.0;
                 boundingBox_temp.centroid_y = boundingBox_temp.start_y + boundingBox_temp.height / 2.0;
 
-
-                // Mat_<double> current_shape = regressor.Predict(frame_flip, boundingBox_temp, initial_number);
+                
+                Mat_<double> current_shape = regressor.Predict(frame_flip, boundingBox_temp, initial_number);
+                
                 image_temp = frame_flip.clone();
-                // for(int i = 0;i < landmark_num;i++){
-                //     circle(image_temp,Point2d(current_shape(i,0),current_shape(i,1)),3,Scalar(255,0,0),-1,8,0);
-                // }
+                
+                for(int i = 0;i < landmark_num;i++){
+                    circle(image_temp,Point2d(current_shape(i,0),current_shape(i,1)),3,Scalar(255,0,0),-1,8,0);
+                }
+                
+                
             }
-
+    
             imshow("result",image_temp);
 
             if(waitKey(1) == 27);
