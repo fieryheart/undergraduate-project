@@ -3,7 +3,7 @@
  * @Author: fieryheart
  * @LastEditors: Please set LastEditors
  * @Date: 2019-04-03 21:07:46
- * @LastEditTime: 2019-04-21 19:41:12
+ * @LastEditTime: 2019-04-25 22:26:12
  */
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -293,7 +293,7 @@ void toTrain()
     ShapeRegressor regressor;
     regressor.Train(images,ground_truth_shapes,bounding_box,first_level_num,second_level_num,
                     candidate_pixel_num,fern_pixel_num,initial_number);
-    regressor.Save("./data/model.txt");
+    regressor.Save("./data/model_me_haar_alt_tree.txt");
     return;
 }
 
@@ -319,7 +319,7 @@ void toCamera()
     }
 
     ShapeRegressor regressor;
-    regressor.Load("./data/model_author.txt");
+    regressor.Load("./data/model_me_haar_alt_tree.txt");
 
     TickMeter tm;
 
@@ -336,6 +336,7 @@ void toCamera()
             cvtColor(frame, frame_gray, CV_RGB2GRAY);
 
             flip(frame_gray, frame_flip, 1);
+            // equalizeHist(frame_flip, frame_flip);
 
             vector<Rect> faceRects;
             face_cascade.detectMultiScale(
@@ -351,7 +352,7 @@ void toCamera()
             // image_temp = frame;
 
     
-            if(faceRects.size()) {
+            if(faceRects.size() > 0) {
                 boundingBox_temp.start_x = faceRects[0].x;
                 boundingBox_temp.start_y = faceRects[0].y;
                 boundingBox_temp.width = faceRects[0].width;
@@ -373,7 +374,7 @@ void toCamera()
     
             imshow("result",image_temp);
 
-            if(waitKey(1) == 27);
+            if(waitKey(1) == 27) ;
         }
         tm.stop();
         cout << 100 / tm.getTimeSec() << "fps" << endl;
