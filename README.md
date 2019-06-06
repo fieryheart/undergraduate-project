@@ -1,1 +1,4 @@
-# undergraduate-project
+
+# 毕业设计——基于深度学习的人脸识别系统
+
+> 项目是我的本科毕业设计，采用的框架是OpenCV和dlib，使用OpenCV获取摄像头，dlib用于用于人脸识别。
