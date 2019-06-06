@@ -2,5 +2,6 @@
 main
 main.dSYM
 data
+dlib
 *.o
 .DS_Store
