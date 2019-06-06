@@ -1,7 +1,7 @@
 /*
  * @Author: fieryheart
  * @Date: 2019-06-06 10:50:53
- * @LastEditTime: 2019-06-06 14:23:44
+ * @LastEditTime: 2019-06-06 17:41:15
  * @Description: This program is based on OpenCV and dlib.
  * @Description: If you find and bugs, please email me: fiery_heart@163.com
  */
@@ -10,6 +10,7 @@
 #define FACE_RECOGNITION
 
 #include <iostream>
+#include <vector>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <dlib/image_processing/frontal_face_detector.h>
@@ -19,6 +20,8 @@
 
 class FaceRecognition {
     public:
+        dlib::frontal_face_detector DetectFace;
+        
         void SetFaceDetectionModel(std::string path) {
             face_detection_model_path = path;
         }
@@ -61,7 +64,7 @@ class FaceRecognition {
             return dst_frame;
         }
         FaceRecognition() {
-            
+            DetectFace = dlib::get_frontal_face_detector();
         }
     private:
         std::string face_detection_model_path;
